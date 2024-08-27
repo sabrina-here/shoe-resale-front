@@ -4,10 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import PageTitle from "../Components/PageTitle";
 import Loader from "../Components/Loader";
-import ShoeCard from "../Components/ShoeCard";
+import MyProductShoeCard from "../PageComponents/MyProductShoeCard";
 
 function MyProducts() {
-  const [deleteProduct, setDeleteProduct] = useState({});
   const { user } = useContext(AuthContext);
 
   const {
@@ -25,8 +24,8 @@ function MyProducts() {
     },
   });
 
-  const handleDeleteDoctors = () => {
-    fetch(`http://localhost:5000/allShoes/${deleteProduct._id}`, {
+  const handleDelete = (id) => {
+    fetch(`http://localhost:5000/allShoes/${id}`, {
       method: "DELETE",
       // headers: {
       //   authorization: `bearer ${localStorage.getItem("token")}`,
@@ -45,7 +44,11 @@ function MyProducts() {
       <PageTitle>My Products</PageTitle>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
         {shoesData.map((shoe) => (
-          <ShoeCard shoe={shoe} key={shoe._id}></ShoeCard>
+          <MyProductShoeCard
+            shoe={shoe}
+            key={shoe._id}
+            handleDelete={handleDelete}
+          ></MyProductShoeCard>
         ))}
       </div>
     </div>

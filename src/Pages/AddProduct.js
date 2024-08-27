@@ -31,6 +31,7 @@ function AddProduct() {
 
   const onSubmit = (data) => {
     data.seller_id = user.uid;
+    data.sale_status = "available";
     const image = data.shoe_image[0];
     const formData = new FormData();
     formData.append("image", image);
@@ -55,7 +56,7 @@ function AddProduct() {
           .then((res) => res.json())
           .then((data) => {
             toast.success(`Product added successfully`);
-            navigate("/seller");
+            navigate("/dashboard/seller");
           });
       });
   };

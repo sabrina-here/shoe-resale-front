@@ -16,10 +16,28 @@ function Signup() {
   const from = location.state?.from?.pathname || "/";
 
   const onSubmit = (data) => {
+    console.log(data);
     createUser(data.email, data.password)
       .then((result) => {
-        toast("User created successfully");
-        navigate(from, { replace: true });
+        const newUser = result.user;
+        const newUserInfo = {
+          user_uid: newUser.uid,
+          user_name: data.name,
+          user_email: data.email,
+          user_type: data.user_type,
+        };
+        fetch("http://localhost:5000/user", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUserInfo),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            toast.success("Sign Up successful");
+            navigate(from, { replace: true });
+          });
       })
       .catch((e) => console.log(e));
   };
@@ -27,17 +45,35 @@ function Signup() {
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((res) => {
-        toast("User created successfully");
-        navigate(from, { replace: true });
+        const newUser = res.user;
+        const newUserInfo = {
+          user_uid: newUser.uid,
+          user_name: newUser.displayName,
+          user_email: newUser.email,
+          user_type: "Customer",
+        };
+        fetch("http://localhost:5000/user", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUserInfo),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            toast.success("Sign Up successful");
+            navigate(from, { replace: true });
+          });
       })
       .catch((e) => console.log(e));
   };
 
   return (
-    <div className="h-[800px] flex justify-center items-center border-2">
+    <div className="h-[800px] flex justify-center items-center ">
       <div className="w-96 border-1">
         <h2 className="text-4xl font-bold text-center my-3">Sign Up</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* ---------------- Name ------------------------ */}
           <label className="form-control w-full">
             <div className="label">
               <span className="label-text">Name</span>
@@ -52,6 +88,27 @@ function Signup() {
               <p className="text-red-600">{errors.name?.message}</p>
             )}
           </label>
+
+          {/* ---------------- Select Buyer/Seller ----------------- */}
+          <label className="form-control w-full ">
+            <div className="label">
+              <span className="label-text">Select User Type</span>
+            </div>
+            <select
+              className="select select-bordered w-full max-w-s"
+              {...register("user_type", {
+                required: "user_type is required",
+              })}
+            >
+              <option>Customer</option>
+              <option>Seller</option>
+            </select>
+            {errors.specialty && (
+              <p className="text-red-600">{errors.specialty?.message}</p>
+            )}
+          </label>
+
+          {/* --------------- Email --------------------- */}
           <label className="form-control w-full">
             <div className="label">
               <span className="label-text">Email</span>
@@ -66,6 +123,8 @@ function Signup() {
               <p className="text-red-600">{errors.email?.message}</p>
             )}
           </label>
+
+          {/* ----------------- Password ----------------- */}
           <label className="form-control w-full ">
             <div className="label">
               <span className="label-text">Password</span>

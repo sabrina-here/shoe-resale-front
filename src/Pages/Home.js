@@ -17,7 +17,7 @@ function Home() {
       </div>
 
       {/* --------- Extra Section --------- */}
-      <div className="my-10">
+      <div className="my-10 ">
         <div className="flex w-full">
           <div className="card  rounded-box grid  flex-grow place-items-center">
             <div className="block">

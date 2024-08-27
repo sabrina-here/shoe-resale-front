@@ -1,37 +1,55 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthProvider";
+import Loader from "./Loader";
+import useSeller from "../Hooks/useSeller";
 
 function Header() {
   const { user, logOut } = useContext(AuthContext);
+  const [isSeller, isSellerLoading] = useSeller(user?.email);
+
   const menuItems = (
     <React.Fragment>
       <li>
         <Link to={"/"}>Home</Link>
       </li>
       <li>
-        <Link>About</Link>
+        <Link to={"/"}>About</Link>
       </li>
+
       <li>
-        <Link>Contact us</Link>
+        <Link to={"/"}>Contact us</Link>
       </li>
 
       {user?.uid ? (
         <>
-          <li>
-            <Link to={"/seller"}>Seller DashBoard</Link>
-          </li>
+          {isSeller ? (
+            <li>
+              <Link to={"/dashboard/seller"}>DashBoard</Link>
+            </li>
+          ) : (
+            <li>
+              <Link to={"/dashboard/myOrders"}>DashBoard</Link>
+            </li>
+          )}
           <li className="btn btn-outline" onClick={() => logOut()}>
-            Sign Out
+            <Link to={"/"}>Sign Out</Link>
           </li>
         </>
       ) : (
-        <li>
-          <Link to={"/login"}>Login</Link>
-        </li>
+        <>
+          <li>
+            <Link to={"/login"}>Login</Link>
+          </li>
+          <li>
+            <Link to={"/signup"}>Sign Up</Link>
+          </li>
+        </>
       )}
     </React.Fragment>
   );
+
+  if (user?.uid && isSellerLoading) return <Loader></Loader>;
 
   return (
     <div>

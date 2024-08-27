@@ -6,7 +6,9 @@ import Login from "../Pages/Login";
 import Signup from "../Pages/Signup";
 import MyProducts from "../Pages/MyProducts";
 import CategoryProducts from "../Pages/CategoryProducts";
-import SellerLayout from "../Layouts/SellerLayout";
+import SellerRoute from "./SellerRoute";
+import DashBoard from "../Layouts/DashBoard";
+import MyOrders from "../Pages/MyOrders";
 
 const routes = createBrowserRouter([
   {
@@ -36,16 +38,28 @@ const routes = createBrowserRouter([
     ],
   },
   {
-    path: "/seller",
-    element: <SellerLayout></SellerLayout>,
+    path: "/dashboard",
+    element: <DashBoard></DashBoard>,
     children: [
       {
-        path: "/seller",
-        element: <MyProducts></MyProducts>,
+        path: "/dashboard/myOrders",
+        element: <MyOrders></MyOrders>,
       },
       {
-        path: "/seller/addProduct",
-        element: <AddProduct></AddProduct>,
+        path: "/dashboard/seller",
+        element: (
+          <SellerRoute>
+            <MyProducts></MyProducts>
+          </SellerRoute>
+        ),
+      },
+      {
+        path: "/dashboard/seller/addProduct",
+        element: (
+          <SellerRoute>
+            <AddProduct></AddProduct>
+          </SellerRoute>
+        ),
       },
     ],
   },
