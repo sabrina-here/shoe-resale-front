@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, replace, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthProvider";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 function Login() {
   const {
@@ -16,11 +17,24 @@ function Login() {
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
 
+  const getToken = (email) => {
+    axios
+      .get(`http://localhost:5000/jwt?email=${email}`)
+      .then(function (response) {
+        localStorage.setItem("token", response.data.accessToken);
+        toast.success("Welcome Back! ");
+        navigate(from, { replace: true });
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  };
+
   const onSubmit = (data) => {
     login(data.email, data.password)
       .then((res) => {
-        toast.success("Welcome Back! ");
-        navigate("/");
+        getToken(data.email);
       })
       .catch((e) => console.log(e));
   };
@@ -28,8 +42,7 @@ function Login() {
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((res) => {
-        toast.success("Welcome Back! ");
-        navigate("/");
+        getToken(res.user.email);
       })
       .catch((e) => console.log(e));
   };

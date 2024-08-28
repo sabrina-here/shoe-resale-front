@@ -3,7 +3,7 @@ import { AuthContext } from "../Contexts/AuthProvider";
 import useAdmin from "../Hooks/useAdmin";
 import { Navigate, useLocation } from "react-router-dom";
 
-function AdminRoute() {
+function AdminRoute({ children }) {
   const { user, loading } = useContext(AuthContext);
   const [isAdmin, isAdminLoading] = useAdmin(user?.email);
   const location = useLocation();

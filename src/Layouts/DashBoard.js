@@ -5,12 +5,14 @@ import Footer from "../Components/Footer";
 import { AuthContext } from "../Contexts/AuthProvider";
 import useSeller from "../Hooks/useSeller";
 import Loader from "../Components/Loader";
+import useAdmin from "../Hooks/useAdmin";
 
 function DashBoard() {
   const { user } = useContext(AuthContext);
   const [isSeller, isSellerLoading] = useSeller(user?.email);
+  const [isAdmin, isAdminLoading] = useAdmin(user?.email);
 
-  if (isSellerLoading) return <Loader></Loader>;
+  if (isSellerLoading || isAdminLoading) return <Loader></Loader>;
 
   return (
     <div>
@@ -38,7 +40,16 @@ function DashBoard() {
           ></label>
           <ul className="menu bg-base-200 text-base-content h-auto w-80 p-4">
             {/* Sidebar content here */}
-            {isSeller ? (
+            {isAdmin ? (
+              <>
+                <li>
+                  <Link to={"/dashboard/admin/allSellers"}>All Sellers</Link>
+                </li>
+                <li>
+                  <Link to={"/dashboard/admin/allBuyers"}>All Buyers</Link>
+                </li>
+              </>
+            ) : isSeller ? (
               <>
                 <li>
                   <Link to={"/dashboard/seller"}>My Products</Link>

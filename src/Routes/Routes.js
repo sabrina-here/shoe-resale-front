@@ -9,6 +9,9 @@ import CategoryProducts from "../Pages/CategoryProducts";
 import SellerRoute from "./SellerRoute";
 import DashBoard from "../Layouts/DashBoard";
 import MyOrders from "../Pages/MyOrders";
+import AllSellers from "../Pages/AllSellers";
+import AdminRoute from "./AdminRoute";
+import AllBuyers from "../Pages/AllBuyers";
 
 const routes = createBrowserRouter([
   {
@@ -59,6 +62,22 @@ const routes = createBrowserRouter([
           <SellerRoute>
             <AddProduct></AddProduct>
           </SellerRoute>
+        ),
+      },
+      {
+        path: "/dashboard/admin/allSellers",
+        element: (
+          <AdminRoute>
+            <AllSellers></AllSellers>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/admin/allBuyers",
+        element: (
+          <AdminRoute>
+            <AllBuyers></AllBuyers>
+          </AdminRoute>
         ),
       },
     ],

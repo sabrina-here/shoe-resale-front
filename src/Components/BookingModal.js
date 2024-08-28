@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-function BookingModal({ shoe }) {
+function BookingModal({ shoe, user }) {
   const {
     brand_name,
     category,
@@ -25,6 +25,7 @@ function BookingModal({ shoe }) {
 
   const onSubmit = (data) => {
     data.shoe_id = shoe._id;
+    data.seller_id = shoe.seller_id;
     data.seller_phone = seller_phone;
     data.seller_location = location;
     data.shoe_price = price;
@@ -33,17 +34,20 @@ function BookingModal({ shoe }) {
     data.description = description;
     data.heel_height = heel_height;
     data.purchase_year = purchase_year;
+    data.customer_id = user.uid;
+    data.sale_status = "booked";
     console.log(data);
     fetch("http://localhost:5000/booking", {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        authorization: `bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((data) => {
-        toast.success(`Product added successfully`);
+        toast.success(`Product Booked successfully`);
       });
   };
 

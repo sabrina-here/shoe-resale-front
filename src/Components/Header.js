@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthProvider";
 import Loader from "./Loader";
 import useSeller from "../Hooks/useSeller";
+import useAdmin from "../Hooks/useAdmin";
 
 function Header() {
   const { user, logOut } = useContext(AuthContext);
   const [isSeller, isSellerLoading] = useSeller(user?.email);
+  const [isAdmin, isAdminLoading] = useAdmin(user?.email);
 
   const menuItems = (
     <React.Fragment>
@@ -23,14 +25,24 @@ function Header() {
 
       {user?.uid ? (
         <>
-          {isSeller ? (
-            <li>
-              <Link to={"/dashboard/seller"}>DashBoard</Link>
-            </li>
+          {isAdmin ? (
+            <>
+              <li>
+                <Link to={"/dashboard/admin/allSellers"}>Admin DashBoard</Link>
+              </li>
+            </>
           ) : (
-            <li>
-              <Link to={"/dashboard/myOrders"}>DashBoard</Link>
-            </li>
+            <>
+              {isSeller ? (
+                <li>
+                  <Link to={"/dashboard/seller"}>Seller DashBoard</Link>
+                </li>
+              ) : (
+                <li>
+                  <Link to={"/dashboard/myOrders"}>DashBoard</Link>
+                </li>
+              )}
+            </>
           )}
           <li className="btn btn-outline" onClick={() => logOut()}>
             <Link to={"/"}>Sign Out</Link>
@@ -49,7 +61,8 @@ function Header() {
     </React.Fragment>
   );
 
-  if (user?.uid && isSellerLoading) return <Loader></Loader>;
+  if ((user?.uid && isSellerLoading) || isAdminLoading)
+    return <Loader></Loader>;
 
   return (
     <div>

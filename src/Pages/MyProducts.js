@@ -17,7 +17,12 @@ function MyProducts() {
     queryKey: ["allShoes", user.uid],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:5000/allShoes/${user.uid}`
+        `http://localhost:5000/allShoes/${user.uid}`,
+        {
+          headers: {
+            authorization: `bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       const data = await response.json();
       return data;
@@ -27,9 +32,9 @@ function MyProducts() {
   const handleDelete = (id) => {
     fetch(`http://localhost:5000/allShoes/${id}`, {
       method: "DELETE",
-      // headers: {
-      //   authorization: `bearer ${localStorage.getItem("token")}`,
-      // },
+      headers: {
+        authorization: `bearer ${localStorage.getItem("token")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => {

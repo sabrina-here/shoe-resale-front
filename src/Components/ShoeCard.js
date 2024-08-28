@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import BookingModal from "./BookingModal";
+import { AuthContext } from "../Contexts/AuthProvider";
 
 function ShoeCard({ shoe }) {
   const {
@@ -14,10 +15,11 @@ function ShoeCard({ shoe }) {
     seller_phone,
     shoe_image,
   } = shoe;
+  const { user } = useContext(AuthContext);
 
   return (
     <div>
-      <BookingModal shoe={shoe}></BookingModal>
+      <BookingModal shoe={shoe} user={user}></BookingModal>
       <div className="card glass w-72">
         <figure>
           <img src={shoe_image} alt="shoe" />

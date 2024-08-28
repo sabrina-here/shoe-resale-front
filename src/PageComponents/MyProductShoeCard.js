@@ -23,7 +23,12 @@ function MyProductShoeCard({ shoe, handleDelete }) {
     queryKey: ["advertised", shoe._id],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:5000/advertised/${shoe._id}`
+        `http://localhost:5000/advertised/${shoe._id}`,
+        {
+          headers: {
+            authorization: `bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       const data = await response.json();
       return data;
@@ -37,6 +42,7 @@ function MyProductShoeCard({ shoe, handleDelete }) {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          authorization: `bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(shoe),
       })

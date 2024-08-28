@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthProvider";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 function Signup() {
   const {
@@ -15,8 +16,21 @@ function Signup() {
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
 
+  const getToken = (email) => {
+    axios
+      .get(`http://localhost:5000/jwt?email=${email}`)
+      .then(function (response) {
+        localStorage.setItem("token", response.data.accessToken);
+        toast("User created successfully");
+        navigate(from, { replace: true });
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  };
+
   const onSubmit = (data) => {
-    console.log(data);
     createUser(data.email, data.password)
       .then((result) => {
         const newUser = result.user;
@@ -34,7 +48,8 @@ function Signup() {
           body: JSON.stringify(newUserInfo),
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then((d) => {
+            getToken(data.email);
             toast.success("Sign Up successful");
             navigate(from, { replace: true });
           });
@@ -60,7 +75,8 @@ function Signup() {
           body: JSON.stringify(newUserInfo),
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then((d) => {
+            getToken(newUser.email);
             toast.success("Sign Up successful");
             navigate(from, { replace: true });
           });
