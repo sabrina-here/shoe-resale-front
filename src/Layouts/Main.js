@@ -9,7 +9,7 @@ function Main() {
   const [categories, setCategories] = useState([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: "categories",
+    queryKey: ["categories"],
     queryFn: async () => {
       const response = await fetch(`http://localhost:5000/categories`);
       const data = await response.json();

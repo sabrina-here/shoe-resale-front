@@ -30,7 +30,7 @@ function Home() {
 
       {/* -------- Advertise section -------- */}
       <div className="my-10">
-        <PageTitle>Advertised Products</PageTitle>
+        {shoesData.length > 0 && <PageTitle>Advertised Products</PageTitle>}
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
           {shoesData.map((shoe) => (
             <ShoeCard key={shoe._id} shoe={shoe}></ShoeCard>

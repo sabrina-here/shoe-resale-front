@@ -37,12 +37,13 @@ function ShoeCard({ shoe }) {
           </p>
           <p className="font-serif font-bold">call: {seller_phone}</p>
           <div className="card-actions justify-end">
-            <button
+            <label
               className="btn btn-neutral"
-              onClick={() => document.getElementById("my_modal_1").showModal()}
+              htmlFor="bookingModal"
+              // onClick={() => document.getElementById("my_modal_1").showModal()}
             >
               Book now!
-            </button>
+            </label>
           </div>
         </div>
       </div>

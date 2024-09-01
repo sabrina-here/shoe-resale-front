@@ -15,14 +15,13 @@ function Signup() {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
+  const imgHostKey = process.env.REACT_APP_imgbb_key;
 
   const getToken = (email) => {
     axios
       .get(`http://localhost:5000/jwt?email=${email}`)
       .then(function (response) {
         localStorage.setItem("token", response.data.accessToken);
-        toast("User created successfully");
-        navigate(from, { replace: true });
       })
       .catch(function (error) {
         // handle error
@@ -31,27 +30,46 @@ function Signup() {
   };
 
   const onSubmit = (data) => {
+    // creating user in firebase
     createUser(data.email, data.password)
       .then((result) => {
         const newUser = result.user;
-        const newUserInfo = {
-          user_uid: newUser.uid,
-          user_name: data.name,
-          user_email: data.email,
-          user_type: data.user_type,
-        };
-        fetch("http://localhost:5000/user", {
+        const image = data.user_image[0];
+        const formData = new FormData();
+        formData.append("image", image);
+        const url = `https://api.imgbb.com/1/upload?key=${imgHostKey}`;
+
+        // getting image url from imageBb
+        fetch(url, {
           method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(newUserInfo),
+          body: formData,
         })
           .then((res) => res.json())
-          .then((d) => {
-            getToken(data.email);
-            toast.success("Sign Up successful");
-            navigate(from, { replace: true });
+          .then((imgData) => {
+            const imgUrl = imgData.data.url;
+            const newUserInfo = {
+              user_uid: newUser.uid,
+              user_name: data.name,
+              user_email: data.email,
+              user_type: data.user_type,
+              user_image: imgUrl,
+            };
+            console.log(newUser);
+
+            // saving user in database
+            fetch("http://localhost:5000/user", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(newUserInfo),
+            })
+              .then((res) => res.json())
+              .then((d) => {
+                getToken(data.email);
+                toast.success("Sign Up successful");
+                navigate(from, { replace: true });
+              });
           });
       })
       .catch((e) => console.log(e));
@@ -163,6 +181,19 @@ function Signup() {
             {errors.password && (
               <p className="text-red-600">{errors.password?.message}</p>
             )}
+          </label>
+
+          {/* --------------- upload image --------------- */}
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text">Upload Your Image</span>
+            </div>
+            <input
+              type="file"
+              placeholder="upload image"
+              className="file-input file-input-bordered w-full "
+              {...register("user_image")}
+            />
           </label>
 
           <input

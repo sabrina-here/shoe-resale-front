@@ -12,15 +12,23 @@ import MyOrders from "../Pages/MyOrders";
 import AllSellers from "../Pages/AllSellers";
 import AdminRoute from "./AdminRoute";
 import AllBuyers from "../Pages/AllBuyers";
+import Blogs from "../Pages/Blogs";
+import ErrorPage from "../Pages/ErrorPage";
+import Payment from "../Pages/Payment";
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <Main></Main>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         path: "/",
         element: <Home></Home>,
+      },
+      {
+        path: "/blogs",
+        element: <Blogs></Blogs>,
       },
 
       {
@@ -37,6 +45,12 @@ const routes = createBrowserRouter([
         element: <CategoryProducts />,
         loader: ({ params }) =>
           fetch(`http://localhost:5000/allShoes/category/${params.cat}`),
+      },
+      {
+        path: "/payment/:bookingId",
+        element: <Payment></Payment>,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/booking/payment/${params.bookingId}`),
       },
     ],
   },

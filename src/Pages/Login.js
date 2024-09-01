@@ -39,6 +39,29 @@ function Login() {
       .catch((e) => console.log(e));
   };
 
+  const handleSellerLogin = () => {
+    login("seller@seller.com", "seller")
+      .then((res) => {
+        getToken("seller@seller.com");
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const handleCustomerLogin = () => {
+    login("customer@customer.com", "customer")
+      .then((res) => {
+        getToken("customer@customer.com");
+      })
+      .catch((e) => console.log(e));
+  };
+  const handleAdminLogin = () => {
+    login("admin@admin.com", "adminadmin")
+      .then((res) => {
+        getToken("admin@admin.com");
+      })
+      .catch((e) => console.log(e));
+  };
+
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((res) => {
@@ -106,6 +129,29 @@ function Login() {
         <button className="btn btn-outline w-full" onClick={handleGoogleSignIn}>
           CONTINUE WITH GOOGLE
         </button>
+        <div className="divider">OR LOGIN AS</div>
+        <div className="grid grid-cols-3 gap-1">
+          <button
+            className="btn btn-primary btn-outline "
+            onClick={handleSellerLogin}
+          >
+            Demo Seller
+          </button>
+
+          <button
+            className="btn btn-secondary btn-outline"
+            onClick={handleCustomerLogin}
+          >
+            Demo Customer
+          </button>
+
+          <button
+            className="btn btn-primary btn-outline"
+            onClick={handleAdminLogin}
+          >
+            Admin
+          </button>
+        </div>
       </div>
     </div>
   );

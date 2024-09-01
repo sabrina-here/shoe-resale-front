@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -23,130 +23,240 @@ function BookingModal({ shoe, user }) {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    data.shoe_id = shoe._id;
-    data.seller_id = shoe.seller_id;
-    data.seller_phone = seller_phone;
-    data.seller_location = location;
-    data.shoe_price = price;
-    data.shoe_image = shoe_image;
-    data.brand_name = brand_name;
-    data.description = description;
-    data.heel_height = heel_height;
-    data.purchase_year = purchase_year;
-    data.customer_id = user.uid;
-    data.sale_status = "booked";
-    console.log(data);
+  const meet_locationRef = useRef();
+  const customer_phoneRef = useRef();
+
+  const handleBooking = () => {
+    const booking = {
+      seller_id: shoe.seller_id,
+      shoe_id: shoe._id,
+      seller_phone: seller_phone,
+      seller_location: location,
+      shoe_price: price,
+      shoe_image: shoe_image,
+      brand_name: brand_name,
+      description: description,
+      heel_height: heel_height,
+      purchase_year: purchase_year,
+      customer_id: user.uid,
+      sale_status: "booked",
+      customer_phone: customer_phoneRef.current?.value,
+      meet_location: meet_locationRef.current?.value,
+    };
+
+    console.log(booking);
     fetch("http://localhost:5000/booking", {
       method: "POST",
       headers: {
         "content-type": "application/json",
         authorization: `bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(booking),
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         toast.success(`Product Booked successfully`);
+        if (customer_phoneRef.current) customer_phoneRef.current.value = "";
+        if (meet_locationRef.current) meet_locationRef.current.value = "";
       });
   };
 
+  // <dialog id="my_modal_1" className="modal">
+  //       <div className="modal-box">
+  //         <form method="dialog">
+  //           {/* if there is a button in form, it will close the modal */}
+  //           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+  //             ✕
+  //           </button>
+  //         </form>
+  //         <h3 className="font-bold text-lg">Hello!</h3>
+  //         <form onSubmit={handleSubmit(onSubmit)} method="dialog">
+  //           {/* ------- Shoe Information --------- */}
+  //           <label className="form-control w-full">
+  //             <div className="label">
+  //               <span className="label-text">Shoe Information</span>
+  //             </div>
+  //             <textarea
+  //               className="textarea textarea-bordered"
+  //               value={shoeInfo}
+  //               readOnly
+  //             ></textarea>
+  //           </label>
+
+  //           {/* ----------- Seller Location --------- */}
+  //           <label className="form-control w-full ">
+  //             <div className="label">
+  //               <span className="label-text">Seller Location</span>
+  //             </div>
+  //             <input
+  //               type="text"
+  //               value={location}
+  //               readOnly
+  //               className="input input-bordered w-full "
+  //             />
+  //           </label>
+
+  //           {/* --------------- Seller Phone Number ------------ */}
+  //           <label className="form-control w-full ">
+  //             <div className="label">
+  //               <span className="label-text">Seller Contact</span>
+  //             </div>
+  //             <input
+  //               type="text"
+  //               value={seller_phone}
+  //               readOnly
+  //               className="input input-bordered w-full "
+  //             />
+  //           </label>
+
+  //           {/* ------------- Meeting Location --------------- */}
+  //           <label className="form-control w-full">
+  //             <div className="label">
+  //               <span className="label-text">
+  //                 Add Your Prefered Meeting Location
+  //               </span>
+  //             </div>
+  //             <input
+  //               type="text"
+  //               placeholder="Type here"
+  //               className="input input-bordered w-full "
+  //               {...register("meet_location", {
+  //                 required: "Meeting Location is required",
+  //               })}
+  //             />
+  //             {errors.meet_location && (
+  //               <p className="text-red-600">{errors.email?.message}</p>
+  //             )}
+  //           </label>
+
+  //           {/* ----------------- Your Contact Number --------------- */}
+  //           <label className="form-control w-full">
+  //             <div className="label">
+  //               <span className="label-text">Add Your Contact Number</span>
+  //             </div>
+  //             <input
+  //               type="text"
+  //               placeholder="Type here"
+  //               className="input input-bordered w-full "
+  //               {...register("customer_phone", {
+  //                 required: "Your Contact is required",
+  //               })}
+  //             />
+  //             {errors.email && (
+  //               <p className="text-red-600">{errors.customer_phone?.message}</p>
+  //             )}
+  //           </label>
+
+  //           <form method="dialog">
+  //             <button
+  //               type="submit"
+  //               className="btn  btn-accent w-full text-white text-2xl my-4"
+  //             >
+  //               Book Now
+  //             </button>
+  //           </form>
+  //         </form>
+  //       </div>
+  //     </dialog>
+
   return (
     <div>
-      <dialog id="my_modal_1" className="modal">
-        <div className="modal-box">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <form onSubmit={handleSubmit(onSubmit)} method="dialog">
-            {/* ------- Shoe Information --------- */}
-            <label className="form-control w-full">
-              <div className="label">
-                <span className="label-text">Shoe Information</span>
-              </div>
-              <textarea
-                className="textarea textarea-bordered"
-                value={shoeInfo}
-              ></textarea>
-            </label>
-
-            {/* ----------- Seller Location --------- */}
-            <label className="form-control w-full ">
-              <div className="label">
-                <span className="label-text">Seller Location</span>
-              </div>
-              <input
-                type="text"
-                value={location}
-                className="input input-bordered w-full "
-              />
-            </label>
-
-            {/* --------------- Seller Phone Number ------------ */}
-            <label className="form-control w-full ">
-              <div className="label">
-                <span className="label-text">Seller Contact</span>
-              </div>
-              <input
-                type="text"
-                value={seller_phone}
-                className="input input-bordered w-full "
-              />
-            </label>
-
-            {/* ------------- Meeting Location --------------- */}
-            <label className="form-control w-full">
-              <div className="label">
-                <span className="label-text">
-                  Add Your Prefered Meeting Location
-                </span>
-              </div>
-              <input
-                type="text"
-                placeholder="Type here"
-                className="input input-bordered w-full "
-                {...register("meet_location", {
-                  required: "Meeting Location is required",
-                })}
-              />
-              {errors.meet_location && (
-                <p className="text-red-600">{errors.email?.message}</p>
-              )}
-            </label>
-
-            {/* ----------------- Your Contact Number --------------- */}
-            <label className="form-control w-full">
-              <div className="label">
-                <span className="label-text">Add Your Contact Number</span>
-              </div>
-              <input
-                type="text"
-                placeholder="Type here"
-                className="input input-bordered w-full "
-                {...register("customer_phone", {
-                  required: "Your Contact is required",
-                })}
-              />
-              {errors.email && (
-                <p className="text-red-600">{errors.customer_phone?.message}</p>
-              )}
-            </label>
-
-            <form method="dialog">
-              <button
-                type="submit"
-                className="btn  btn-accent w-full text-white text-2xl my-4"
+      <div>
+        <input type="checkbox" id="bookingModal" className="modal-toggle" />
+        <div className="modal" role="dialog">
+          <div className="modal-box">
+            <div className="modal-action">
+              <label
+                htmlFor="bookingModal"
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
               >
-                Book Now
-              </button>
+                ✕
+              </label>
+            </div>
+            <button></button>
+            <form method="dialog">
+              {/* ------- Shoe Information --------- */}
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">Shoe Information</span>
+                </div>
+                <textarea
+                  className="textarea textarea-bordered"
+                  value={shoeInfo}
+                  readOnly
+                ></textarea>
+              </label>
+
+              {/* ----------- Seller Location --------- */}
+              <label className="form-control w-full ">
+                <div className="label">
+                  <span className="label-text">Seller Location</span>
+                </div>
+                <input
+                  type="text"
+                  value={location}
+                  readOnly
+                  className="input input-bordered w-full "
+                />
+              </label>
+
+              {/* --------------- Seller Phone Number ------------ */}
+              <label className="form-control w-full ">
+                <div className="label">
+                  <span className="label-text">Seller Contact</span>
+                </div>
+                <input
+                  type="text"
+                  value={seller_phone}
+                  readOnly
+                  className="input input-bordered w-full "
+                />
+              </label>
+
+              {/* ------------- Meeting Location --------------- */}
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">
+                    Add Your Prefered Meeting Location
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full "
+                  ref={meet_locationRef}
+                  required
+                />
+              </label>
+
+              {/* ----------------- Your Contact Number --------------- */}
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">Add Your Contact Number</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full "
+                  ref={customer_phoneRef}
+                  required
+                />
+              </label>
+
+              <div className="modal-action">
+                <label
+                  htmlFor="bookingModal"
+                  className="btn btn-accent"
+                  onClick={handleBooking}
+                >
+                  Confirm Booking
+                </label>
+              </div>
             </form>
-          </form>
+          </div>
         </div>
-      </dialog>
+      </div>
     </div>
   );
 }

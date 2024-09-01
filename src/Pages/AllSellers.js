@@ -1,11 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useContext, useState } from "react";
 import Loader from "../Components/Loader";
 import PageTitle from "../Components/PageTitle";
 import toast from "react-hot-toast";
+import { AuthContext } from "../Contexts/AuthProvider";
+import ConfirmationModal from "../Components/ConfirmationModal";
 
 function AllSellers() {
-  const { data, isLoading, error, refetch } = useQuery({
+  const { userDelete } = useContext(AuthContext);
+  const [deleteUser, setDeleteUser] = useState({});
+  const {
+    data: userData = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["admin", "allSellers"],
     queryFn: async () => {
       try {
@@ -25,8 +34,9 @@ function AllSellers() {
     },
   });
 
-  const handleDelete = (id) => {
-    fetch(`http://localhost:5000/user/admin/deleteSeller/${id}`, {
+  const handleDelete = (uid) => {
+    fetch(`http://localhost:5000/admin/deleteSeller/${uid}`, {
+      //deleting from database
       method: "DELETE",
       headers: {
         authorization: `bearer ${localStorage.getItem("token")}`,
@@ -34,16 +44,104 @@ function AllSellers() {
     })
       .then((res) => res.json())
       .then((data) => {
-        toast.success("deleted successfully");
         refetch();
+        console.log("Successfully deleted user");
       });
   };
+
+  const handleVerify = (user) => {};
+
   if (isLoading) return <Loader></Loader>;
 
   return (
     <div>
+      <ConfirmationModal
+        modalTitle={"Are you sure you want to Delete"}
+        modalText={"Deleting will remove The account of this user permanently."}
+        confirmFunction={handleDelete}
+        confirmFunctionParam={deleteUser.user_uid}
+      ></ConfirmationModal>
       <PageTitle>All Sellers</PageTitle>
-      <div>{console.log(data)}</div>
+      <div>
+        <div className="overflow-x-auto">
+          <table className="table">
+            {/* head */}
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {userData?.map((user, index) => (
+                <tr key={user._id}>
+                  <th>{index + 1}</th>
+                  <td>
+                    <div className="flex items-center gap-3">
+                      {user.user_image ? (
+                        <div className="avatar">
+                          <div className="mask mask-circle  w-20">
+                            <img
+                              src={user.user_image}
+                              alt="Avatar Tailwind CSS Component"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="avatar placeholder">
+                          <div className="bg-neutral text-neutral-content w-20 rounded-full">
+                            <span className="text-xl">{user.user_name}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div>
+                        <div className="font-bold">{user.user_name}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    {user.user_email}
+                    <br />
+                    <span className="badge badge-ghost badge-sm">Seller</span>
+                  </td>
+
+                  <th>
+                    <button
+                      className="btn btn-accent btn-s"
+                      onClick={() => handleVerify(user)}
+                    >
+                      Verify
+                    </button>
+                  </th>
+                  <th>
+                    <label
+                      htmlFor="confirmModal"
+                      className="btn btn-error btn-s"
+                      onClick={() => setDeleteUser(user)}
+                    >
+                      Delete
+                    </label>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+            {/* foot */}
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

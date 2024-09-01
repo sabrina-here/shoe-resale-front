@@ -20,7 +20,7 @@ function Header() {
       </li>
 
       <li>
-        <Link to={"/"}>Contact us</Link>
+        <Link to={"/blogs"}>Blogs</Link>
       </li>
 
       {user?.uid ? (
