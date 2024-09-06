@@ -6,7 +6,7 @@ import useSeller from "../Hooks/useSeller";
 import useAdmin from "../Hooks/useAdmin";
 
 function Header() {
-  const { user, logOut } = useContext(AuthContext);
+  const { user, logOut, loading } = useContext(AuthContext);
   const [isSeller, isSellerLoading] = useSeller(user?.email);
   const [isAdmin, isAdminLoading] = useAdmin(user?.email);
 
@@ -61,8 +61,8 @@ function Header() {
     </React.Fragment>
   );
 
-  if ((user?.uid && isSellerLoading) || isAdminLoading)
-    return <Loader></Loader>;
+  if (loading) return <Loader></Loader>;
+  // if (isSellerLoading || isAdminLoading) return <Loader></Loader>;
 
   return (
     <div>

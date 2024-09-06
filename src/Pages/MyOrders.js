@@ -17,7 +17,7 @@ function Myorders() {
     queryKey: ["booking", user.uid],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:5000/booking/${user.uid}`,
+        `https://shoe-resale-server.vercel.app/booking/${user.uid}`,
         {
           headers: {
             authorization: `bearer ${localStorage.getItem("token")}`,
@@ -30,7 +30,7 @@ function Myorders() {
   });
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/booking/${id}`, {
+    fetch(`https://shoe-resale-server.vercel.app/booking/${id}`, {
       method: "DELETE",
       headers: {
         authorization: `bearer ${localStorage.getItem("token")}`,

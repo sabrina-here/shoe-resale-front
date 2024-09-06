@@ -18,11 +18,14 @@ function AllSellers() {
     queryKey: ["admin", "allSellers"],
     queryFn: async () => {
       try {
-        const response = await fetch(`http://localhost:5000/admin/allSellers`, {
-          headers: {
-            authorization: `bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await fetch(
+          `https://shoe-resale-server.vercel.app/admin/allSellers`,
+          {
+            headers: {
+              authorization: `bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -35,7 +38,7 @@ function AllSellers() {
   });
 
   const handleDelete = (uid) => {
-    fetch(`http://localhost:5000/admin/deleteSeller/${uid}`, {
+    fetch(`https://shoe-resale-server.vercel.app/admin/deleteSeller/${uid}`, {
       //deleting from database
       method: "DELETE",
       headers: {

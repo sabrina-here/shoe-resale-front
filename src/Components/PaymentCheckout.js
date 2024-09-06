@@ -54,7 +54,7 @@ function PaymentCheckout({ data: booking }) {
         bookingId: booking._id,
         shoe_id: booking.shoe_id,
       };
-      fetch("http://localhost:5000/payment", {
+      fetch("https://shoe-resale-server.vercel.app/payment", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -73,7 +73,7 @@ function PaymentCheckout({ data: booking }) {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:5000/create-payment-intent", {
+    fetch("https://shoe-resale-server.vercel.app/create-payment-intent", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

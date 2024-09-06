@@ -15,7 +15,9 @@ function Home() {
   } = useQuery({
     queryKey: ["advertisedProducts"],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/advertisedProducts`);
+      const response = await fetch(
+        `https://shoe-resale-server.vercel.app/advertisedProducts`
+      );
       const data = await response.json();
       return data;
     },
