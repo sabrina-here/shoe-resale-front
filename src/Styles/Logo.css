@@ -1,0 +1,36 @@
+.cls-1 {
+  fill: #231f20;
+}
+
+.cls-1,
+.cls-2,
+.cls-3,
+.cls-4 {
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.cls-1,
+.cls-3 {
+  stroke-width: 1.1px;
+}
+
+.cls-2 {
+  fill: url(#linear-gradient-2);
+}
+
+.cls-2,
+.cls-4 {
+  stroke-width: 3.03px;
+}
+
+.cls-3 {
+  fill: #e0527b;
+}
+
+.cls-4 {
+  fill: url(#linear-gradient);
+}
+
+/* primary: #E0527B */
+/* accent : #66ABAD */

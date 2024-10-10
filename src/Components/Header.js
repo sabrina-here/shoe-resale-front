@@ -5,6 +5,7 @@ import Loader from "./Loader";
 import useSeller from "../Hooks/useSeller";
 import useAdmin from "../Hooks/useAdmin";
 import { useQuery } from "@tanstack/react-query";
+import Logo from "./Logo";
 
 function Header() {
   const { user, logOut, loading } = useContext(AuthContext);
@@ -114,8 +115,10 @@ function Header() {
               {menuItems}
             </ul>
           </div>
-          <Link to={"/"} className="btn btn-ghost text-xl">
-            Shoe Resale
+          <Link to={"/"}>
+            <div tabIndex={2} role="button" className="w-48">
+              <Logo></Logo>
+            </div>
           </Link>
 
           <div>
