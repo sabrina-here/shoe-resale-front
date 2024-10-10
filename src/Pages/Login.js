@@ -19,7 +19,7 @@ function Login() {
 
   const getToken = (email) => {
     axios
-      .get(`https://shoe-resale-server.vercel.app/jwt?email=${email}`)
+      .get(`http://localhost:5000/jwt?email=${email}`)
       .then(function (response) {
         localStorage.setItem("token", response.data.accessToken);
         toast.success("Welcome Back! ");

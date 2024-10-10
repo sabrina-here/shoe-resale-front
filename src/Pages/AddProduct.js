@@ -19,9 +19,7 @@ function AddProduct() {
   const { data, isLoading } = useQuery({
     queryKey: "categories",
     queryFn: async () => {
-      const response = await fetch(
-        `https://shoe-resale-server.vercel.app/categories`
-      );
+      const response = await fetch(`http://localhost:5000/categories`);
       const data = await response.json();
       setCategories(data[0].categories);
       return data;
@@ -48,7 +46,7 @@ function AddProduct() {
         data.shoe_image = imgUrl;
 
         // save doctor info in database
-        fetch("https://shoe-resale-server.vercel.app/addProduct", {
+        fetch("http://localhost:5000/addProduct", {
           method: "POST",
           headers: {
             "content-type": "application/json",

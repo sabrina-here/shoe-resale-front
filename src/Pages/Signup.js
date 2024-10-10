@@ -19,7 +19,7 @@ function Signup() {
 
   const getToken = (email) => {
     axios
-      .get(`https://shoe-resale-server.vercel.app/jwt?email=${email}`)
+      .get(`http://localhost:5000/jwt?email=${email}`)
       .then(function (response) {
         localStorage.setItem("token", response.data.accessToken);
       })
@@ -57,7 +57,7 @@ function Signup() {
             console.log(newUser);
 
             // saving user in database
-            fetch("https://shoe-resale-server.vercel.app/user", {
+            fetch("http://localhost:5000/user", {
               method: "POST",
               headers: {
                 "content-type": "application/json",
@@ -85,7 +85,7 @@ function Signup() {
           user_email: newUser.email,
           user_type: "Customer",
         };
-        fetch("https://shoe-resale-server.vercel.app/user", {
+        fetch("http://localhost:5000/user", {
           method: "POST",
           headers: {
             "content-type": "application/json",

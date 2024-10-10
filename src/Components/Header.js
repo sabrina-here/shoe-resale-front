@@ -1,14 +1,36 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthProvider";
 import Loader from "./Loader";
 import useSeller from "../Hooks/useSeller";
 import useAdmin from "../Hooks/useAdmin";
+import { useQuery } from "@tanstack/react-query";
 
 function Header() {
   const { user, logOut, loading } = useContext(AuthContext);
   const [isSeller, isSellerLoading] = useSeller(user?.email);
   const [isAdmin, isAdminLoading] = useAdmin(user?.email);
+
+  const [categories, setCategories] = useState([]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:5000/categories`);
+      const data = await response.json();
+      setCategories(data[0].categories);
+      return data;
+    },
+  });
+
+  const navigate = useNavigate();
+
+  const handleCategoryChange = (event) => {
+    const selectedCategory = event.target.value;
+    if (selectedCategory) {
+      navigate(`/categoryProducts/${selectedCategory}`);
+    }
+  };
 
   const menuItems = (
     <React.Fragment>
@@ -61,7 +83,7 @@ function Header() {
     </React.Fragment>
   );
 
-  if (loading) return <Loader></Loader>;
+  if (loading || isLoading) return <Loader></Loader>;
   // if (isSellerLoading || isAdminLoading) return <Loader></Loader>;
 
   return (
@@ -95,28 +117,35 @@ function Header() {
           <Link to={"/"} className="btn btn-ghost text-xl">
             Shoe Resale
           </Link>
+
+          <div>
+            <select
+              className="select select-bordered w-full max-w-xs"
+              defaultValue="default"
+              onChange={handleCategoryChange}
+            >
+              <option value="default" disabled>
+                Shoe Categories
+              </option>
+
+              {categories?.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
+        {/* ----- LARGE DEVICE MENU ITEMS -------- */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
 
-        {/* ----- OPEN SIDE NAV IN SMALL DEVICE------------ */}
+        {/* ----- OPEN SIDE NAV IN SMALL DEVICE FOR SHOE CATEGORIES------------ */}
         <label htmlFor="my-drawer-2">
           <div tabIndex={1} role="button" className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
+            Categories
           </div>
         </label>
       </div>

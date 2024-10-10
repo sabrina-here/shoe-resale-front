@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import HomeBanner from "../PageComponents/HomeBanner";
 import PageTitle from "../Components/PageTitle";
 import loafer from "../assets/loafer.jpg";
 import blush from "../assets/blushKate.jpg";
 import Loader from "../Components/Loader";
 import ShoeCard from "../Components/ShoeCard";
+import { AuthContext } from "../Contexts/AuthProvider";
+import BookingModal from "../Components/BookingModal";
 
 function Home() {
   const {
@@ -15,18 +17,30 @@ function Home() {
   } = useQuery({
     queryKey: ["advertisedProducts"],
     queryFn: async () => {
-      const response = await fetch(
-        `https://shoe-resale-server.vercel.app/advertisedProducts`
-      );
+      const response = await fetch(`http://localhost:5000/advertisedProducts`);
       const data = await response.json();
       return data;
     },
   });
 
+  const [shoe, setShoe] = useState({});
+  const { user } = useContext(AuthContext);
+
+  const handleShoeBooking = (shoeData) => {
+    setShoe(shoeData);
+  };
+
   if (isLoading) return <Loader></Loader>;
 
   return (
     <div>
+      {/* ----------- MODAL FOR SHOE BOOKING ------------- */}
+      <BookingModal
+        shoe={shoe}
+        user={user}
+        handleShoeBooking={handleShoeBooking}
+      ></BookingModal>
+
       {/* ------- Banner ------- */}
       <HomeBanner></HomeBanner>
 
@@ -35,7 +49,11 @@ function Home() {
         {shoesData.length > 0 && <PageTitle>Advertised Products</PageTitle>}
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
           {shoesData.map((shoe) => (
-            <ShoeCard key={shoe._id} shoe={shoe}></ShoeCard>
+            <ShoeCard
+              shoe={shoe}
+              handleShoeBooking={handleShoeBooking}
+              key={shoe._id}
+            ></ShoeCard>
           ))}
         </div>
       </div>

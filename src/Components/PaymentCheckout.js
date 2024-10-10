@@ -1,6 +1,7 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { AuthContext } from "../Contexts/AuthProvider";
 
 function PaymentCheckout({ data: booking }) {
   const stripe = useStripe();
@@ -8,7 +9,7 @@ function PaymentCheckout({ data: booking }) {
   const [clientSecret, setClientSecret] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [processing, setProcessing] = useState(false);
-  console.log(booking);
+  const { user } = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,15 +37,16 @@ function PaymentCheckout({ data: booking }) {
         payment_method: {
           card: card,
           billing_details: {
-            seller_uid: booking.seller_id,
-            customer_uid: booking.customer_id,
-            shoe_id: booking.shoe_id,
+            email: user?.email || "anonymous",
+            name: user?.displayName || "anonymous",
           },
         },
       }
     );
     if (err) {
       console.log("err: ", err);
+    } else {
+      console.log(paymentIntent);
     }
     if (paymentIntent?.status === "succeeded") {
       // ------- sending payment confirmation info to database after payment success -----
@@ -54,7 +56,7 @@ function PaymentCheckout({ data: booking }) {
         bookingId: booking._id,
         shoe_id: booking.shoe_id,
       };
-      fetch("https://shoe-resale-server.vercel.app/payment", {
+      fetch("http://localhost:5000/payment", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -73,7 +75,7 @@ function PaymentCheckout({ data: booking }) {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    fetch("https://shoe-resale-server.vercel.app/create-payment-intent", {
+    fetch("http://localhost:5000/create-payment-intent", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,7 +84,10 @@ function PaymentCheckout({ data: booking }) {
       body: JSON.stringify(booking),
     })
       .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
+      .then((data) => {
+        console.log("secret: ", data.clientSecret);
+        setClientSecret(data.clientSecret);
+      });
   }, [booking.shoe_price]);
 
   return (

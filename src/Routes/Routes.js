@@ -44,17 +44,13 @@ const routes = createBrowserRouter([
         path: "/categoryProducts/:cat",
         element: <CategoryProducts />,
         loader: ({ params }) =>
-          fetch(
-            `https://shoe-resale-server.vercel.app/allShoes/category/${params.cat}`
-          ),
+          fetch(`http://localhost:5000/allShoes/category/${params.cat}`),
       },
       {
         path: "/payment/:bookingId",
         element: <Payment></Payment>,
         loader: ({ params }) =>
-          fetch(
-            `https://shoe-resale-server.vercel.app/booking/payment/${params.bookingId}`
-          ),
+          fetch(`http://localhost:5000/booking/payment/${params.bookingId}`),
       },
     ],
   },

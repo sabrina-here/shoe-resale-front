@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import BookingModal from "./BookingModal";
 import { AuthContext } from "../Contexts/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
-function ShoeCard({ shoe }) {
+function ShoeCard({ shoe, handleShoeBooking }) {
   const {
     brand_name,
     category,
@@ -16,10 +16,15 @@ function ShoeCard({ shoe }) {
     shoe_image,
   } = shoe;
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleBooking = () => {
+    if (!user) navigate("/login");
+    handleShoeBooking(shoe);
+  };
 
   return (
     <div>
-      <BookingModal shoe={shoe} user={user}></BookingModal>
       <div className="card glass w-72">
         <figure>
           <img src={shoe_image} alt="shoe" />
@@ -40,7 +45,7 @@ function ShoeCard({ shoe }) {
             <label
               className="btn btn-neutral"
               htmlFor="bookingModal"
-              // onClick={() => document.getElementById("my_modal_1").showModal()}
+              onClick={handleBooking}
             >
               Book now!
             </label>
