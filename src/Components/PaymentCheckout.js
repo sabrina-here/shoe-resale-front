@@ -51,12 +51,17 @@ function PaymentCheckout({ data: booking }) {
     if (paymentIntent?.status === "succeeded") {
       // ------- sending payment confirmation info to database after payment success -----
       const payment = {
-        price: booking.shoe_price,
-        transactionId: paymentIntent.id,
-        bookingId: booking._id,
         shoe_id: booking.shoe_id,
+
+        shoe_price: booking.shoe_price,
+        transactionId: paymentIntent.id,
+        seller_id: booking.seller_id,
+        customer_id: booking.customer_id,
+        shoe_image: booking.shoe_image,
+        brand_name: booking.brand_name,
+        description: booking.description,
       };
-      fetch("http://localhost:5000/payment", {
+      fetch("https://shoe-resale-server.vercel.app/payment", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -75,7 +80,7 @@ function PaymentCheckout({ data: booking }) {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:5000/create-payment-intent", {
+    fetch("https://shoe-resale-server.vercel.app/create-payment-intent", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

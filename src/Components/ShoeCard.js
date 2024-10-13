@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../Contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function ShoeCard({ shoe, handleShoeBooking }) {
   const {
@@ -23,6 +24,17 @@ function ShoeCard({ shoe, handleShoeBooking }) {
     handleShoeBooking(shoe);
   };
 
+  const buttonVariants = {
+    hover: {
+      scale: 1.1,
+      textShadow: "0px 0px 8px rgb(255,255,255)",
+      boxShadow: "0px 0px 8px rgb(0,0,0)",
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
+
   return (
     <div>
       <div className="card glass w-72">
@@ -42,13 +54,15 @@ function ShoeCard({ shoe, handleShoeBooking }) {
           </p>
           <p className="font-serif font-bold">call: {seller_phone}</p>
           <div className="card-actions justify-end">
-            <label
+            <motion.label
               className="btn btn-neutral"
               htmlFor="bookingModal"
               onClick={handleBooking}
+              variants={buttonVariants}
+              whileHover="hover"
             >
               Book now!
-            </label>
+            </motion.label>
           </div>
         </div>
       </div>

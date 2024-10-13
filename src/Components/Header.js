@@ -17,7 +17,9 @@ function Header() {
   const { data, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/categories`);
+      const response = await fetch(
+        `https://shoe-resale-server.vercel.app/categories`
+      );
       const data = await response.json();
       setCategories(data[0].categories);
       return data;
@@ -31,6 +33,13 @@ function Header() {
     if (selectedCategory) {
       navigate(`/categoryProducts/${selectedCategory}`);
     }
+  };
+
+  const handleLogout = () => {
+    logOut()
+      .then()
+      .catch((e) => console.error(e));
+    navigate("/");
   };
 
   const menuItems = (
@@ -67,8 +76,8 @@ function Header() {
               )}
             </>
           )}
-          <li className="btn btn-outline" onClick={() => logOut()}>
-            <Link to={"/"}>Sign Out</Link>
+          <li className="btn btn-outline" onClick={handleLogout}>
+            Sign Out
           </li>
         </>
       ) : (

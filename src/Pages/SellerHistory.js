@@ -1,12 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useContext } from "react";
-import Loader from "../Components/Loader";
 import PageTitle from "../Components/PageTitle";
-import toast from "react-hot-toast";
 import { AuthContext } from "../Contexts/AuthProvider";
-import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "../Components/Loader";
 
-function Myorders() {
+function SellerHistory() {
   const { user } = useContext(AuthContext);
 
   const {
@@ -14,10 +12,10 @@ function Myorders() {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["booking", user.uid],
+    queryKey: ["payment", user.uid],
     queryFn: async () => {
       const response = await fetch(
-        `https://shoe-resale-server.vercel.app/booking/${user.uid}`,
+        `https://shoe-resale-server.vercel.app/seller/${user.uid}`,
         {
           headers: {
             authorization: `bearer ${localStorage.getItem("token")}`,
@@ -29,27 +27,14 @@ function Myorders() {
     },
   });
 
-  const handleDelete = (id) => {
-    fetch(`https://shoe-resale-server.vercel.app/booking/${id}`, {
-      method: "DELETE",
-      headers: {
-        authorization: `bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        toast.success("deleted successfully");
-        refetch();
-      });
-  };
   if (isLoading) return <Loader></Loader>;
 
   return (
-    <div className=" mx-auto">
-      <PageTitle>My orders</PageTitle>
+    <div>
+      <PageTitle>Your Selling History</PageTitle>
       <div>
         {shoesData.length === 0 ? (
-          <div> You Have no Orders </div>
+          <div> You Have no Selling History </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="table">
@@ -59,8 +44,6 @@ function Myorders() {
                   <th></th>
                   <th>Brand</th>
                   <th>Price</th>
-                  <th></th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -90,21 +73,6 @@ function Myorders() {
                         {shoe.description}
                       </span>
                     </td>
-
-                    <th>
-                      <button className="btn btn-accent btn-s">
-                        <Link to={`/payment/${shoe._id}`}>Pay</Link>
-                      </button>
-                    </th>
-                    <th>
-                      <label
-                        htmlFor="confirmModal"
-                        className="btn btn-error btn-s"
-                        onClick={() => handleDelete(shoe._id)}
-                      >
-                        Delete
-                      </label>
-                    </th>
                   </tr>
                 ))}
               </tbody>
@@ -114,8 +82,6 @@ function Myorders() {
                   <th></th>
                   <th>Brand</th>
                   <th>Price</th>
-                  <th></th>
-                  <th></th>
                 </tr>
               </tfoot>
             </table>
@@ -126,4 +92,4 @@ function Myorders() {
   );
 }
 
-export default Myorders;
+export default SellerHistory;

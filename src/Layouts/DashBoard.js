@@ -56,11 +56,22 @@ function DashBoard() {
                 <li>
                   <Link to={"/dashboard/seller/addProduct"}>Add Product</Link>
                 </li>
+                <li>
+                  <Link to={"/dashboard/seller/sellerBookings"}>
+                    My Bookings
+                  </Link>
+                </li>
+                <li>
+                  <Link to={"/dashboard/seller/sellerHistory"}>My History</Link>
+                </li>
               </>
             ) : (
               <>
                 <li>
                   <Link to={"/dashboard/myOrders"}>My Orders</Link>
+                </li>
+                <li>
+                  <Link to={"/dashboard/customerHistory"}>My History</Link>
                 </li>
               </>
             )}

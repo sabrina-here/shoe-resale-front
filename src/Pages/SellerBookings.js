@@ -1,12 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useContext } from "react";
-import Loader from "../Components/Loader";
 import PageTitle from "../Components/PageTitle";
-import toast from "react-hot-toast";
 import { AuthContext } from "../Contexts/AuthProvider";
-import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import Loader from "../Components/Loader";
+import { useQuery } from "@tanstack/react-query";
 
-function Myorders() {
+function SellerBookings() {
   const { user } = useContext(AuthContext);
 
   const {
@@ -14,10 +13,10 @@ function Myorders() {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["booking", user.uid],
+    queryKey: ["sellerBooking", user.uid],
     queryFn: async () => {
       const response = await fetch(
-        `https://shoe-resale-server.vercel.app/booking/${user.uid}`,
+        `https://shoe-resale-server.vercel.app/sellerBooking/${user.uid}`,
         {
           headers: {
             authorization: `bearer ${localStorage.getItem("token")}`,
@@ -46,7 +45,7 @@ function Myorders() {
 
   return (
     <div className=" mx-auto">
-      <PageTitle>My orders</PageTitle>
+      <PageTitle>Your Bookings</PageTitle>
       <div>
         {shoesData.length === 0 ? (
           <div> You Have no Orders </div>
@@ -59,7 +58,6 @@ function Myorders() {
                   <th></th>
                   <th>Brand</th>
                   <th>Price</th>
-                  <th></th>
                   <th></th>
                 </tr>
               </thead>
@@ -92,11 +90,6 @@ function Myorders() {
                     </td>
 
                     <th>
-                      <button className="btn btn-accent btn-s">
-                        <Link to={`/payment/${shoe._id}`}>Pay</Link>
-                      </button>
-                    </th>
-                    <th>
                       <label
                         htmlFor="confirmModal"
                         className="btn btn-error btn-s"
@@ -115,7 +108,6 @@ function Myorders() {
                   <th>Brand</th>
                   <th>Price</th>
                   <th></th>
-                  <th></th>
                 </tr>
               </tfoot>
             </table>
@@ -126,4 +118,4 @@ function Myorders() {
   );
 }
 
-export default Myorders;
+export default SellerBookings;

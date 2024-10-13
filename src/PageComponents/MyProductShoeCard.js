@@ -23,7 +23,7 @@ function MyProductShoeCard({ shoe, handleDelete }) {
     queryKey: ["advertised", shoe._id],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:5000/advertised/${shoe._id}`,
+        `https://shoe-resale-server.vercel.app/advertised/${shoe._id}`,
         {
           headers: {
             authorization: `bearer ${localStorage.getItem("token")}`,
@@ -38,7 +38,7 @@ function MyProductShoeCard({ shoe, handleDelete }) {
   const handleAdvertise = (shoe) => {
     shoe.shoe_id = shoe._id;
     if (shoe.sale_status === "available") {
-      fetch("http://localhost:5000/advertise", {
+      fetch("https://shoe-resale-server.vercel.app/advertise", {
         method: "POST",
         headers: {
           "content-type": "application/json",

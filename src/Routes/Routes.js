@@ -15,6 +15,9 @@ import AllBuyers from "../Pages/AllBuyers";
 import Blogs from "../Pages/Blogs";
 import ErrorPage from "../Pages/ErrorPage";
 import Payment from "../Pages/Payment";
+import CustomerHistory from "../Pages/CustomerHistory";
+import SellerBookings from "../Pages/SellerBookings";
+import SellerHistory from "../Pages/SellerHistory";
 
 const routes = createBrowserRouter([
   {
@@ -44,13 +47,17 @@ const routes = createBrowserRouter([
         path: "/categoryProducts/:cat",
         element: <CategoryProducts />,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/allShoes/category/${params.cat}`),
+          fetch(
+            `https://shoe-resale-server.vercel.app/allShoes/category/${params.cat}`
+          ),
       },
       {
         path: "/payment/:bookingId",
         element: <Payment></Payment>,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/booking/payment/${params.bookingId}`),
+          fetch(
+            `https://shoe-resale-server.vercel.app/booking/payment/${params.bookingId}`
+          ),
       },
     ],
   },
@@ -61,6 +68,10 @@ const routes = createBrowserRouter([
       {
         path: "/dashboard/myOrders",
         element: <MyOrders></MyOrders>,
+      },
+      {
+        path: "/dashboard/customerHistory",
+        element: <CustomerHistory></CustomerHistory>,
       },
       {
         path: "/dashboard/seller",
@@ -75,6 +86,22 @@ const routes = createBrowserRouter([
         element: (
           <SellerRoute>
             <AddProduct></AddProduct>
+          </SellerRoute>
+        ),
+      },
+      {
+        path: "/dashboard/seller/sellerBookings",
+        element: (
+          <SellerRoute>
+            <SellerBookings></SellerBookings>
+          </SellerRoute>
+        ),
+      },
+      {
+        path: "/dashboard/seller/sellerHistory",
+        element: (
+          <SellerRoute>
+            <SellerHistory></SellerHistory>
           </SellerRoute>
         ),
       },
